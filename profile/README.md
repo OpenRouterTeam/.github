@@ -56,7 +56,7 @@ import { OpenRouter } from "@openrouter/sdk";
 const openRouter = new OpenRouter(); // reads OPENROUTER_API_KEY
 
 const result = await openRouter.chat.send({
-  model: "openai/gpt-5",
+  model: "openai/gpt-5.5",
   messages: [{ role: "user", content: "Hello, how are you?" }],
   provider: { sort: "price" }, // smart routing: cheapest provider first
   stream: true,
@@ -79,7 +79,7 @@ from openrouter import OpenRouter
 
 with OpenRouter(api_key=os.getenv("OPENROUTER_API_KEY")) as open_router:
     res = open_router.chat.send(
-        model="anthropic/claude-4.5-sonnet",
+        model="anthropic/claude-fable-5",
         messages=[{"role": "user", "content": "Hello, how are you?"}],
         provider={"sort": "price"},  # smart routing: cheapest provider first
     )
