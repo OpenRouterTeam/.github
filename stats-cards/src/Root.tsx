@@ -2,10 +2,10 @@ import {Composition} from 'remotion';
 import {StatCard, statCardSchema} from './StatCard';
 import './style.css';
 
-const FPS = 30;
-const DURATION = 90; // 3s seamless loop
-const WIDTH = 640;
-const HEIGHT = 260;
+const FPS = 20; // rendered 1:1 into the GIF
+const DURATION = 60; // 3s
+const WIDTH = 720;
+const HEIGHT = 292;
 
 export const Root: React.FC = () => {
   return (

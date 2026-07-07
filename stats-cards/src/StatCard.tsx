@@ -52,7 +52,7 @@ export const StatCard: React.FC<Props> = ({
     frame: frame - 4,
     fps,
     config: {damping: 30, stiffness: 60},
-    durationInFrames: 45,
+    durationInFrames: 30,
   });
   const displayed = formatValue(countSpring * value, value);
 

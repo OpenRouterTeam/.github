@@ -7,9 +7,9 @@
     "studio": "remotion studio",
     "fetch": "node scripts/fetch-stats.mjs",
     "render": "npm run fetch && npm run render:models && npm run render:providers && npm run render:tokens",
-    "render:models": "remotion render models ../profile/assets/stat-models.gif --codec=gif --every-nth-frame=2 --props=out/props-models.json",
-    "render:providers": "remotion render providers ../profile/assets/stat-providers.gif --codec=gif --every-nth-frame=2 --props=out/props-providers.json",
-    "render:tokens": "remotion render tokens ../profile/assets/stat-tokens.gif --codec=gif --every-nth-frame=2 --props=out/props-tokens.json"
+    "render:models": "remotion render models ../profile/assets/stat-models.gif --codec=gif --number-of-gif-loops=0 --props=out/props-models.json",
+    "render:providers": "remotion render providers ../profile/assets/stat-providers.gif --codec=gif --number-of-gif-loops=0 --props=out/props-providers.json",
+    "render:tokens": "remotion render tokens ../profile/assets/stat-tokens.gif --codec=gif --number-of-gif-loops=0 --props=out/props-tokens.json"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.229",
