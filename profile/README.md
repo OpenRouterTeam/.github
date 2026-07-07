@@ -86,7 +86,77 @@ with OpenRouter(api_key=os.getenv("OPENROUTER_API_KEY")) as open_router:
     print(res.choices[0].message.content)
 ```
 
-Also available: [Go SDK](https://github.com/OpenRouterTeam/go-sdk) · [Agent SDK](https://github.com/OpenRouterTeam/typescript-agent) · plain [OpenAI-compatible REST API](https://openrouter.ai/docs/quickstart)
+**Go** — [`go-sdk`](https://github.com/OpenRouterTeam/go-sdk)
+
+```bash
+go get github.com/OpenRouterTeam/go-sdk
+```
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+
+	openrouter "github.com/OpenRouterTeam/go-sdk"
+	"github.com/OpenRouterTeam/go-sdk/models/components"
+)
+
+func main() {
+	s := openrouter.New(
+		openrouter.WithSecurity(os.Getenv("OPENROUTER_API_KEY")),
+	)
+
+	res, err := s.Chat.Send(context.Background(), components.ChatRequest{
+		Model: openrouter.Pointer("openai/gpt-5.5"),
+		Messages: []components.ChatMessages{
+			components.CreateChatMessagesUser(
+				components.ChatUserMessage{
+					Role: components.ChatUserMessageRoleUser,
+					Content: components.CreateChatUserMessageContentStr(
+						"Hello, how are you?",
+					),
+				},
+			),
+		},
+	}, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(res.ChatResult.Choices)
+}
+```
+
+**Agents** — [`@openrouter/agent`](https://github.com/OpenRouterTeam/typescript-agent) · tools are auto-executed, responses streamable
+
+```bash
+npm add @openrouter/sdk @openrouter/agent
+```
+
+```typescript
+import OpenRouter from "@openrouter/sdk";
+import { callModel, tool } from "@openrouter/agent";
+import { z } from "zod";
+
+const client = new OpenRouter({ apiKey: process.env.OPENROUTER_API_KEY });
+
+const weatherTool = tool({
+  name: "get_weather",
+  description: "Get the current weather for a location",
+  inputSchema: z.object({ location: z.string() }),
+  execute: async ({ location }) => ({ temperature: 72, condition: "sunny", location }),
+});
+
+const result = callModel(client, {
+  model: "anthropic/claude-fable-5",
+  input: "What is the weather in San Francisco?",
+  tools: [weatherTool] as const,
+});
+
+console.log(await result.getText()); // tools run automatically
+```
 
 ## 🔧 Our open source
 
