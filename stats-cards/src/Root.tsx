@@ -4,8 +4,8 @@ import './style.css';
 
 const FPS = 20; // rendered 1:1 into the GIF
 const DURATION = 60; // 3s
-const WIDTH = 720;
-const HEIGHT = 292;
+const WIDTH = 880;
+const HEIGHT = 356;
 
 export const Root: React.FC = () => {
   return (

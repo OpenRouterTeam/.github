@@ -118,7 +118,7 @@ export const StatCard: React.FC<Props> = ({
         }}
       >
         <div
-          className="relative h-full w-full overflow-hidden rounded-2xl px-10"
+          className="relative h-full w-full overflow-hidden rounded-2xl px-12"
           style={{
             background:
               'linear-gradient(145deg, #0b1120 0%, #060a14 55%, #0a0f1e 100%)',
@@ -151,7 +151,7 @@ export const StatCard: React.FC<Props> = ({
           <div className="relative flex h-full flex-col justify-center">
             <div className="flex items-baseline gap-1 overflow-hidden">
               <span
-                className="text-8xl font-extrabold tracking-tight text-transparent"
+                className="text-[9.5rem] leading-none font-extrabold tracking-tight text-transparent"
                 style={{
                   backgroundImage: `linear-gradient(100deg, #f8fafc 30%, ${accent} 50%, #f8fafc 70%)`,
                   backgroundClip: 'text',
@@ -165,7 +165,7 @@ export const StatCard: React.FC<Props> = ({
                 {displayed}
               </span>
               <span
-                className="text-6xl font-bold"
+                className="text-8xl font-bold"
                 style={{color: accent, filter: `drop-shadow(0 0 10px ${accent}80)`}}
               >
                 {suffix}
@@ -173,7 +173,7 @@ export const StatCard: React.FC<Props> = ({
             </div>
 
             <div className="mt-2 flex items-center gap-3">
-              <span className="text-2xl font-semibold uppercase tracking-[0.25em] text-slate-200">
+              <span className="text-4xl font-semibold uppercase tracking-[0.25em] text-slate-100">
                 {label}
               </span>
               <span
@@ -183,7 +183,7 @@ export const StatCard: React.FC<Props> = ({
                 }}
               />
             </div>
-            <span className="mt-1 text-lg text-slate-400">{sub}</span>
+            <span className="mt-2 text-[1.75rem] text-slate-400">{sub}</span>
           </div>
         </div>
       </div>
