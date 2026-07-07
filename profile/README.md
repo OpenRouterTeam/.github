@@ -14,9 +14,9 @@ Find the best models & prices for your prompts — through a single, OpenAI-comp
 
 <br>
 
-<a href="https://openrouter.ai/models"><img src="./assets/stat-models.svg" alt="Models on OpenRouter" width="290"></a>
-<a href="https://openrouter.ai/models"><img src="./assets/stat-providers.svg" alt="Providers on OpenRouter" width="290"></a>
-<a href="https://openrouter.ai/rankings"><img src="./assets/stat-tokens.svg" alt="Tokens routed per week" width="290"></a>
+<a href="https://openrouter.ai/models"><img src="./assets/stat-models.gif" alt="Models on OpenRouter" width="290"></a>
+<a href="https://openrouter.ai/models"><img src="./assets/stat-providers.gif" alt="Providers on OpenRouter" width="290"></a>
+<a href="https://openrouter.ai/rankings"><img src="./assets/stat-tokens.gif" alt="Tokens routed per week" width="290"></a>
 
 <sub>Live stats — regenerated daily by <a href="../.github/workflows/update-stats.yml">CI</a></sub>
 

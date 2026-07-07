@@ -7,9 +7,9 @@
     "studio": "remotion studio",
     "fetch": "node scripts/fetch-stats.mjs",
     "render": "npm run fetch && npm run render:models && npm run render:providers && npm run render:tokens",
-    "render:models": "remotion render models out/stat-models.gif --codec=gif --every-nth-frame=2 --props=out/props-models.json && node scripts/wrap-svg.mjs out/stat-models.gif ../profile/assets/stat-models.svg",
-    "render:providers": "remotion render providers out/stat-providers.gif --codec=gif --every-nth-frame=2 --props=out/props-providers.json && node scripts/wrap-svg.mjs out/stat-providers.gif ../profile/assets/stat-providers.svg",
-    "render:tokens": "remotion render tokens out/stat-tokens.gif --codec=gif --every-nth-frame=2 --props=out/props-tokens.json && node scripts/wrap-svg.mjs out/stat-tokens.gif ../profile/assets/stat-tokens.svg"
+    "render:models": "remotion render models ../profile/assets/stat-models.gif --codec=gif --every-nth-frame=2 --props=out/props-models.json",
+    "render:providers": "remotion render providers ../profile/assets/stat-providers.gif --codec=gif --every-nth-frame=2 --props=out/props-providers.json",
+    "render:tokens": "remotion render tokens ../profile/assets/stat-tokens.gif --codec=gif --every-nth-frame=2 --props=out/props-tokens.json"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.229",
