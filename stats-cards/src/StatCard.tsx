@@ -66,8 +66,15 @@ export const StatCard: React.FC<Props> = ({
   // Beam of light traveling across the top edge (aceternity-style)
   const beamX = interpolate(frame % durationInFrames, [0, durationInFrames], [-30, 130]);
 
-  // Shine sweeping across the number
-  const shineX = interpolate(frame % durationInFrames, [0, durationInFrames], [-120, 220]);
+  // Shine sweeping across the number. Completes early and clamps at a
+  // position where the accent stripe (and its repeat tile) sit fully
+  // outside the text, so the final held frame is clean white digits.
+  const shineX = interpolate(
+    frame,
+    [0, durationInFrames * 0.7],
+    [-120, 130],
+    {extrapolateRight: 'clamp'}
+  );
 
   return (
     <AbsoluteFill className="items-center justify-center" style={{backgroundColor: '#02040a'}}>
