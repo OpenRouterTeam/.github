@@ -18,9 +18,29 @@ export const statCardSchema = z.object({
   sub: z.string(),
   accent: z.string(),
   accent2: z.string(),
+  theme: z.enum(['dark', 'light']),
 });
 
 type Props = z.infer<typeof statCardSchema>;
+
+const THEMES = {
+  dark: {
+    surface: 'linear-gradient(145deg, #101114 0%, #0A0B0D 55%, #0E0F13 100%)',
+    border: '#3B3D42',
+    text: '#DDE0E2',
+    sub: '#8B8D98',
+    dot: '#ffffff0c',
+    shineBase: '#DDE0E2',
+  },
+  light: {
+    surface: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAFB 55%, #F4F4F6 100%)',
+    border: '#E4E4E7',
+    text: '#09090B',
+    sub: '#52525B',
+    dot: '#09090B14',
+    shineBase: '#09090B',
+  },
+} as const;
 
 const formatValue = (v: number, target: number) => {
   const decimals = Number.isInteger(target) ? 0 : 1;
@@ -43,9 +63,11 @@ export const StatCard: React.FC<Props> = ({
   sub,
   accent,
   accent2,
+  theme,
 }) => {
   const frame = useCurrentFrame();
   const {fps, durationInFrames, width, height} = useVideoConfig();
+  const t = THEMES[theme];
 
   // --- Entrance ---
   const enter = spring({frame, fps, config: {damping: 16, stiffness: 120}});
@@ -60,7 +82,6 @@ export const StatCard: React.FC<Props> = ({
   });
   const displayed = formatValue(countSpring * value, value);
 
-  // --- Seamless looping ambience ---
   // Theme loop easing: cubic-bezier(0.4, 0, 0.6, 1)
   const loop = pingPong(frame, durationInFrames);
   const glow = interpolate(loop, [0, 1], [0.35, 0.75], {
@@ -70,12 +91,12 @@ export const StatCard: React.FC<Props> = ({
   // Conic border sweep (full rotation per loop = seamless)
   const sweep = (frame / durationInFrames) * 360;
 
-  // Beam of light traveling across the top edge (aceternity-style)
+  // Beam of light traveling across the top edge
   const beamX = interpolate(frame % durationInFrames, [0, durationInFrames], [-30, 130]);
 
   // Shine sweeping across the number. Completes early and clamps at a
   // position where the accent stripe (and its repeat tile) sit fully
-  // outside the text, so the final held frame is clean white digits.
+  // outside the text, so the final held frame is clean digits.
   const shineX = interpolate(
     frame,
     [0, durationInFrames * 0.7],
@@ -84,62 +105,55 @@ export const StatCard: React.FC<Props> = ({
   );
 
   return (
-    <AbsoluteFill
-      className="items-center justify-center"
-      style={{backgroundColor: '#0A0B0D', fontFamily}}
-    >
-      {/* Ambient background glow orbs */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          width: width * 0.9,
-          height: height * 1.4,
-          left: -width * 0.25,
-          top: -height * 0.5,
-          background: `radial-gradient(circle, ${accent}18 0%, transparent 70%)`,
-          opacity: glow,
-          filter: 'blur(20px)',
-        }}
-      />
-      <div
-        className="absolute rounded-full"
-        style={{
-          width: width * 0.9,
-          height: height * 1.4,
-          right: -width * 0.25,
-          bottom: -height * 0.5,
-          background: `radial-gradient(circle, ${accent2}14 0%, transparent 70%)`,
-          opacity: 1 - glow * 0.6,
-          filter: 'blur(20px)',
-        }}
-      />
-
+    // Transparent canvas: GIF alpha is 1-bit, so no exterior glows/shadows.
+    <AbsoluteFill className="items-center justify-center" style={{fontFamily}}>
       {/* Card with animated gradient border */}
       <div
         className="relative rounded-lg"
         style={{
-          width: width - 48,
-          height: height - 48,
+          width: width - 8,
+          height: height - 8,
           padding: 1.5,
           transform: `translateY(${rise}px) scale(${0.96 + enter * 0.04})`,
           opacity: enter,
-          background: `conic-gradient(from ${sweep}deg at 50% 50%, ${accent}B0 0deg, transparent 70deg, transparent 180deg, ${accent2}70 250deg, transparent 310deg, ${accent}B0 360deg), linear-gradient(#3B3D42, #3B3D42)`,
-          boxShadow: `0 0 ${16 + glow * 16}px ${accent}20, 0 1px 2px rgb(0 0 0 / 0.025), 0 16px 40px #00000070`,
+          background: `conic-gradient(from ${sweep}deg at 50% 50%, ${accent}B0 0deg, transparent 70deg, transparent 180deg, ${accent2}70 250deg, transparent 310deg, ${accent}B0 360deg), linear-gradient(${t.border}, ${t.border})`,
         }}
       >
         <div
           className="relative h-full w-full overflow-hidden rounded-lg px-12"
-          style={{
-            background:
-              'linear-gradient(145deg, #101114 0%, #0A0B0D 55%, #0E0F13 100%)',
-          }}
+          style={{background: t.surface}}
         >
+          {/* Ambient glow, clipped inside the card */}
+          <div
+            className="absolute rounded-full"
+            style={{
+              width: width * 0.8,
+              height: height * 1.2,
+              left: -width * 0.2,
+              top: -height * 0.45,
+              background: `radial-gradient(circle, ${accent}${theme === 'dark' ? '18' : '10'} 0%, transparent 70%)`,
+              opacity: glow,
+              filter: 'blur(20px)',
+            }}
+          />
+          <div
+            className="absolute rounded-full"
+            style={{
+              width: width * 0.8,
+              height: height * 1.2,
+              right: -width * 0.2,
+              bottom: -height * 0.45,
+              background: `radial-gradient(circle, ${accent2}${theme === 'dark' ? '14' : '0c'} 0%, transparent 70%)`,
+              opacity: 1 - glow * 0.6,
+              filter: 'blur(20px)',
+            }}
+          />
+
           {/* Dot grid */}
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage:
-                'radial-gradient(circle, #ffffff0c 1px, transparent 1px)',
+              backgroundImage: `radial-gradient(circle, ${t.dot} 1px, transparent 1px)`,
               backgroundSize: '22px 22px',
               maskImage:
                 'radial-gradient(ellipse at 30% 40%, black 20%, transparent 75%)',
@@ -163,7 +177,7 @@ export const StatCard: React.FC<Props> = ({
               <span
                 className="text-[9.5rem] leading-none font-extrabold tracking-tight text-transparent"
                 style={{
-                  backgroundImage: `linear-gradient(100deg, #DDE0E2 30%, ${accent2} 50%, #DDE0E2 70%)`,
+                  backgroundImage: `linear-gradient(100deg, ${t.shineBase} 30%, ${accent2} 50%, ${t.shineBase} 70%)`,
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   backgroundSize: '250% 100%',
@@ -185,7 +199,7 @@ export const StatCard: React.FC<Props> = ({
             <div className="mt-2 flex items-center gap-3">
               <span
                 className="text-4xl font-semibold uppercase tracking-[0.25em]"
-                style={{color: '#DDE0E2'}}
+                style={{color: t.text}}
               >
                 {label}
               </span>
@@ -196,7 +210,7 @@ export const StatCard: React.FC<Props> = ({
                 }}
               />
             </div>
-            <span className="mt-2 text-[1.75rem]" style={{color: '#8B8D98'}}>
+            <span className="mt-2 text-[1.75rem]" style={{color: t.sub}}>
               {sub}
             </span>
           </div>

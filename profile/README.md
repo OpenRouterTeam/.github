@@ -14,11 +14,9 @@ Find the best models & prices for your prompts — through a single, OpenAI-comp
 
 <br>
 
-<a href="https://openrouter.ai/models"><img src="./assets/stat-models.gif" alt="Models on OpenRouter" width="290"></a>
-<a href="https://openrouter.ai/models"><img src="./assets/stat-providers.gif" alt="Providers on OpenRouter" width="290"></a>
-<a href="https://openrouter.ai/rankings"><img src="./assets/stat-tokens.gif" alt="Tokens routed per week" width="290"></a>
-
-<sub>Live stats — regenerated daily by <a href="../.github/workflows/update-stats.yml">CI</a></sub>
+<a href="https://openrouter.ai/models"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/stat-models-dark.gif"><img src="./assets/stat-models-light.gif" alt="Models on OpenRouter" width="290"></picture></a>
+<a href="https://openrouter.ai/models"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/stat-providers-dark.gif"><img src="./assets/stat-providers-light.gif" alt="Providers on OpenRouter" width="290"></picture></a>
+<a href="https://openrouter.ai/rankings"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/stat-tokens-dark.gif"><img src="./assets/stat-tokens-light.gif" alt="Tokens routed per week" width="290"></picture></a>
 
 [![Website](https://img.shields.io/badge/Website-openrouter.ai-1e293b?style=for-the-badge)](https://openrouter.ai)
 [![Docs](https://img.shields.io/badge/Docs-openrouter.ai%2Fdocs-1e293b?style=for-the-badge)](https://openrouter.ai/docs)
@@ -44,50 +42,74 @@ Find the best models & prices for your prompts — through a single, OpenAI-comp
 </picture>
 </div>
 
-## Quickstart
+## Quickstart with the OpenRouter SDKs
+
+**TypeScript** — [`@openrouter/sdk`](https://github.com/OpenRouterTeam/typescript-sdk)
 
 ```bash
-curl https://openrouter.ai/api/v1/chat/completions \
-  -H "Authorization: Bearer $OPENROUTER_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "openrouter/auto",
-    "messages": [{ "role": "user", "content": "Hello!" }]
-  }'
+npm add @openrouter/sdk
 ```
 
-### Not just a proxy — automatic fallbacks & smart routing
+```typescript
+import { OpenRouter } from "@openrouter/sdk";
 
-If a provider goes down or rate-limits you, your request still succeeds:
+const openRouter = new OpenRouter(); // reads OPENROUTER_API_KEY
+
+const result = await openRouter.chat.send({
+  model: "openai/gpt-5",
+  messages: [{ role: "user", content: "Hello, how are you?" }],
+  provider: { sort: "price" }, // smart routing: cheapest provider first
+  stream: true,
+});
+
+for await (const chunk of result) {
+  console.log(chunk.choices[0].delta.content);
+}
+```
+
+**Python** — [`openrouter`](https://github.com/OpenRouterTeam/python-sdk)
+
+```bash
+pip install openrouter
+```
 
 ```python
-from openai import OpenAI
+import os
+from openrouter import OpenRouter
 
-client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key="OPENROUTER_API_KEY",
-)
-
-completion = client.chat.completions.create(
-    model="anthropic/claude-sonnet-4.5",
-    extra_body={
-        "models": ["openai/gpt-5", "google/gemini-2.5-pro"],  # automatic fallbacks
-    },
-    messages=[{"role": "user", "content": "Hello!"}],
-)
-print(completion.choices[0].message.content)
+with OpenRouter(api_key=os.getenv("OPENROUTER_API_KEY")) as open_router:
+    res = open_router.chat.send(
+        model="anthropic/claude-4.5-sonnet",
+        messages=[{"role": "user", "content": "Hello, how are you?"}],
+        provider={"sort": "price"},  # smart routing: cheapest provider first
+    )
+    print(res.choices[0].message.content)
 ```
 
-Or let OpenRouter pick the best model for each prompt with `model="openrouter/auto"`.
+Also available: [Go SDK](https://github.com/OpenRouterTeam/go-sdk) · [Agent SDK](https://github.com/OpenRouterTeam/typescript-agent) · plain [OpenAI-compatible REST API](https://openrouter.ai/docs/quickstart)
 
 ## 🔧 Our open source
 
+### SDKs & agent tooling
+
 | Repo | What it is |
 | --- | --- |
+| [typescript-sdk](https://github.com/OpenRouterTeam/typescript-sdk) | Official TypeScript SDK — type-safe access to 400+ models in any JS/TS runtime |
+| [python-sdk](https://github.com/OpenRouterTeam/python-sdk) | Official Python SDK — sync + async clients, Pydantic types |
+| [go-sdk](https://github.com/OpenRouterTeam/go-sdk) | Official Go SDK — provider routing, guardrails, and analytics |
+| [typescript-agent](https://github.com/OpenRouterTeam/typescript-agent) | `@openrouter/agent` — tool orchestration, streaming, multi-turn agents |
 | [ai-sdk-provider](https://github.com/OpenRouterTeam/ai-sdk-provider) | OpenRouter provider for the Vercel AI SDK |
-| [openrouter-examples](https://github.com/OpenRouterTeam/openrouter-examples) | Example apps and integration patterns |
-| [openrouter-runner](https://github.com/OpenRouterTeam/openrouter-runner) | Inference engine powering OpenRouter's open-source models |
-| [docs](https://openrouter.ai/docs) | API reference, guides, and feature docs |
+| [skills](https://github.com/OpenRouterTeam/skills) | Agent skills for building with OpenRouter |
+
+### Examples & integrations
+
+| Repo | What it is |
+| --- | --- |
+| [openrouter-examples](https://github.com/OpenRouterTeam/openrouter-examples) | Examples of integrating the OpenRouter API |
+| [openrouter-examples-python](https://github.com/OpenRouterTeam/openrouter-examples-python) | Calling OpenRouter models from Python |
+| [tool-calling](https://github.com/OpenRouterTeam/tool-calling) | Tool calling demo for OpenRouter |
+| [sign-in-with-openrouter](https://github.com/OpenRouterTeam/sign-in-with-openrouter) | Templates and skills for adding Sign In with OpenRouter |
+| [awesome-openrouter](https://github.com/OpenRouterTeam/awesome-openrouter) | Community list of apps built on OpenRouter |
 
 ## Resources
 
