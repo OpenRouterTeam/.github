@@ -1,11 +1,15 @@
 import {
   AbsoluteFill,
+  Easing,
   interpolate,
   spring,
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion';
 import {z} from 'zod';
+import {loadFont} from '@remotion/google-fonts/Inter';
+
+const {fontFamily} = loadFont();
 
 export const statCardSchema = z.object({
   value: z.number(),
@@ -57,8 +61,11 @@ export const StatCard: React.FC<Props> = ({
   const displayed = formatValue(countSpring * value, value);
 
   // --- Seamless looping ambience ---
+  // Theme loop easing: cubic-bezier(0.4, 0, 0.6, 1)
   const loop = pingPong(frame, durationInFrames);
-  const glow = interpolate(loop, [0, 1], [0.35, 0.75]);
+  const glow = interpolate(loop, [0, 1], [0.35, 0.75], {
+    easing: Easing.bezier(0.4, 0, 0.6, 1),
+  });
 
   // Conic border sweep (full rotation per loop = seamless)
   const sweep = (frame / durationInFrames) * 360;
@@ -77,7 +84,10 @@ export const StatCard: React.FC<Props> = ({
   );
 
   return (
-    <AbsoluteFill className="items-center justify-center" style={{backgroundColor: '#02040a'}}>
+    <AbsoluteFill
+      className="items-center justify-center"
+      style={{backgroundColor: '#0A0B0D', fontFamily}}
+    >
       {/* Ambient background glow orbs */}
       <div
         className="absolute rounded-full"
@@ -86,7 +96,7 @@ export const StatCard: React.FC<Props> = ({
           height: height * 1.4,
           left: -width * 0.25,
           top: -height * 0.5,
-          background: `radial-gradient(circle, ${accent}22 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${accent}18 0%, transparent 70%)`,
           opacity: glow,
           filter: 'blur(20px)',
         }}
@@ -98,7 +108,7 @@ export const StatCard: React.FC<Props> = ({
           height: height * 1.4,
           right: -width * 0.25,
           bottom: -height * 0.5,
-          background: `radial-gradient(circle, ${accent2}22 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${accent2}14 0%, transparent 70%)`,
           opacity: 1 - glow * 0.6,
           filter: 'blur(20px)',
         }}
@@ -106,22 +116,22 @@ export const StatCard: React.FC<Props> = ({
 
       {/* Card with animated gradient border */}
       <div
-        className="relative rounded-2xl"
+        className="relative rounded-lg"
         style={{
           width: width - 48,
           height: height - 48,
           padding: 1.5,
           transform: `translateY(${rise}px) scale(${0.96 + enter * 0.04})`,
           opacity: enter,
-          background: `conic-gradient(from ${sweep}deg at 50% 50%, ${accent} 0deg, transparent 60deg, transparent 180deg, ${accent2} 240deg, transparent 300deg, ${accent} 360deg), linear-gradient(#1e293b, #1e293b)`,
-          boxShadow: `0 0 ${30 + glow * 30}px ${accent}30, 0 20px 50px #00000090`,
+          background: `conic-gradient(from ${sweep}deg at 50% 50%, ${accent}B0 0deg, transparent 70deg, transparent 180deg, ${accent2}70 250deg, transparent 310deg, ${accent}B0 360deg), linear-gradient(#3B3D42, #3B3D42)`,
+          boxShadow: `0 0 ${16 + glow * 16}px ${accent}20, 0 1px 2px rgb(0 0 0 / 0.025), 0 16px 40px #00000070`,
         }}
       >
         <div
-          className="relative h-full w-full overflow-hidden rounded-2xl px-12"
+          className="relative h-full w-full overflow-hidden rounded-lg px-12"
           style={{
             background:
-              'linear-gradient(145deg, #0b1120 0%, #060a14 55%, #0a0f1e 100%)',
+              'linear-gradient(145deg, #101114 0%, #0A0B0D 55%, #0E0F13 100%)',
           }}
         >
           {/* Dot grid */}
@@ -129,7 +139,7 @@ export const StatCard: React.FC<Props> = ({
             className="absolute inset-0"
             style={{
               backgroundImage:
-                'radial-gradient(circle, #ffffff10 1px, transparent 1px)',
+                'radial-gradient(circle, #ffffff0c 1px, transparent 1px)',
               backgroundSize: '22px 22px',
               maskImage:
                 'radial-gradient(ellipse at 30% 40%, black 20%, transparent 75%)',
@@ -153,37 +163,42 @@ export const StatCard: React.FC<Props> = ({
               <span
                 className="text-[9.5rem] leading-none font-extrabold tracking-tight text-transparent"
                 style={{
-                  backgroundImage: `linear-gradient(100deg, #f8fafc 30%, ${accent} 50%, #f8fafc 70%)`,
+                  backgroundImage: `linear-gradient(100deg, #DDE0E2 30%, ${accent2} 50%, #DDE0E2 70%)`,
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   backgroundSize: '250% 100%',
                   backgroundPosition: `${shineX}% 0%`,
                   fontVariantNumeric: 'tabular-nums',
-                  filter: `drop-shadow(0 0 ${8 + glow * 14}px ${accent}50)`,
+                  filter: `drop-shadow(0 0 ${6 + glow * 8}px ${accent}35)`,
                 }}
               >
                 {displayed}
               </span>
               <span
                 className="text-8xl font-bold"
-                style={{color: accent, filter: `drop-shadow(0 0 10px ${accent}80)`}}
+                style={{color: accent, filter: `drop-shadow(0 0 8px ${accent}50)`}}
               >
                 {suffix}
               </span>
             </div>
 
             <div className="mt-2 flex items-center gap-3">
-              <span className="text-4xl font-semibold uppercase tracking-[0.25em] text-slate-100">
+              <span
+                className="text-4xl font-semibold uppercase tracking-[0.25em]"
+                style={{color: '#DDE0E2'}}
+              >
                 {label}
               </span>
               <span
                 className="h-px flex-1"
                 style={{
-                  background: `linear-gradient(90deg, ${accent}70, transparent)`,
+                  background: `linear-gradient(90deg, ${accent}60, transparent)`,
                 }}
               />
             </div>
-            <span className="mt-2 text-[1.75rem] text-slate-400">{sub}</span>
+            <span className="mt-2 text-[1.75rem]" style={{color: '#8B8D98'}}>
+              {sub}
+            </span>
           </div>
         </div>
       </div>

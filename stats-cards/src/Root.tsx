@@ -23,8 +23,8 @@ export const Root: React.FC = () => {
           suffix: '+',
           label: 'Models',
           sub: 'one API for every frontier lab',
-          accent: '#60a5fa',
-          accent2: '#a78bfa',
+          accent: '#6366F1',
+          accent2: '#7B82F8',
         }}
       />
       <Composition
@@ -40,8 +40,8 @@ export const Root: React.FC = () => {
           suffix: '+',
           label: 'Providers',
           sub: 'automatic fallbacks & smart routing',
-          accent: '#34d399',
-          accent2: '#60a5fa',
+          accent: '#6366F1',
+          accent2: '#7B82F8',
         }}
       />
       <Composition
@@ -57,8 +57,8 @@ export const Root: React.FC = () => {
           suffix: 'T',
           label: 'Tokens / week',
           sub: 'routed across the network',
-          accent: '#f472b6',
-          accent2: '#fb923c',
+          accent: '#6366F1',
+          accent2: '#7B82F8',
         }}
       />
     </>

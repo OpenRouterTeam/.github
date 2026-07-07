@@ -13,12 +13,13 @@
   },
   "dependencies": {
     "@remotion/cli": "^4.0.229",
+    "@remotion/google-fonts": "^4.0.486",
     "@remotion/tailwind-v4": "^4.0.229",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "remotion": "^4.0.229",
-    "zod": "^3.23.8",
-    "tailwindcss": "^4.0.0"
+    "tailwindcss": "^4.0.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
