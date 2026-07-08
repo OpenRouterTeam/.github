@@ -38,7 +38,15 @@ for (const stat of stats) {
     ].join(' ');
     console.log(`\n▶ ${id}`);
     execSync(cmd, {stdio: 'inherit'});
-    // Recompress below GitHub's ~10MB camo proxy limit (2x renders are ~15MB).
-    execSync(`gifsicle -O3 --lossy=60 ${out} -o ${out}`, {stdio: 'inherit'});
+    // High-quality Lanczos downscale to exactly 2x the README's 208px
+    // display width. Browsers downscale with cheap bilinear filtering
+    // (~4 samples per output pixel), so shipping the raw 1760px render
+    // aliased the text edges at 8.5x; a clean 2:1 step for the browser
+    // keeps glyph edges smooth. Also recompresses ~15MB -> well under
+    // GitHub's ~10MB camo proxy limit.
+    execSync(
+      `gifsicle -O3 --lossy=60 --resize-width 416 --resize-method lanczos3 --resize-colors 255 ${out} -o ${out}`,
+      {stdio: 'inherit'}
+    );
   }
 }
