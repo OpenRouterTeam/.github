@@ -29,8 +29,10 @@ type Props = z.infer<typeof statCardSchema>;
 
 const THEMES = {
   dark: {
-    surface: (angle: number) =>
-      `linear-gradient(${angle}deg, #101114 0%, #0A0B0D 55%, #0E0F13 100%)`,
+    // Flat base: the animated gradient wave exits offscreen before the
+    // play-once GIF holds its final frame, ending on this solid color.
+    base: '#0C0D10',
+    wave: 'rgba(99, 102, 241, 0.10)',
     border: '#3B3D42',
     text: '#DDE0E2',
     sub: '#8B8D98',
@@ -38,8 +40,8 @@ const THEMES = {
     shineBase: '#DDE0E2',
   },
   light: {
-    surface: (angle: number) =>
-      `linear-gradient(${angle}deg, #FFFFFF 0%, #FAFAFB 55%, #F4F4F6 100%)`,
+    base: '#FAFAFB',
+    wave: 'rgba(99, 102, 241, 0.08)',
     // Deliberately darker than the site's zinc-200: the GIF corner
     // stair-step pixels take this color, and near-white reads as white
     // fringing on dark page backgrounds.
@@ -110,8 +112,33 @@ export const StatCard: React.FC<Props> = ({
   // Conic border sweep (full rotation per loop = seamless)
   const sweep = (loopFrame / durationInFrames) * 360;
 
-  // Beam of light traveling across the top edge
-  const beamX = interpolate(loopFrame, [0, durationInFrames], [-30, 130]);
+  // Beam of light traveling across the top edge. Driven by `frame` (not the
+  // phase-shifted loop) so it has fully exited when the GIF holds its last
+  // frame; the per-variant delay keeps the row animating as a wave.
+  const beamX = interpolate(
+    frame,
+    [variant * 2, durationInFrames * 0.75 + variant * 2],
+    [-30, 130],
+    {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}
+  );
+
+  // Gradient wave traveling across the surface: starts fully offscreen left,
+  // exits fully offscreen right, so the held final frame is the flat base.
+  // Staggered per variant so it flows through the row of cards.
+  const waveX = interpolate(
+    frame,
+    [variant * 3, durationInFrames * 0.78 + variant * 3],
+    [-140, 110],
+    {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}
+  );
+
+  // Ambient glows fade out completely before the final held frame.
+  const exit = interpolate(
+    frame,
+    [durationInFrames * 0.65, durationInFrames * 0.9],
+    [0, 1],
+    {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}
+  );
 
   // Shine sweeping across the number. Completes early and clamps at a
   // position where the accent stripe (and its repeat tile) sit fully
@@ -143,8 +170,18 @@ export const StatCard: React.FC<Props> = ({
       >
         <div
           className="relative h-full w-full overflow-hidden rounded-[26.5px] px-12"
-          style={{background: t.surface(surfaceAngle)}}
+          style={{background: t.base}}
         >
+          {/* Gradient wave: sweeps through once, then fully offscreen so the
+              final frame ends on the flat base color */}
+          <div
+            className="absolute top-0 h-full"
+            style={{
+              width: '130%',
+              left: `${waveX}%`,
+              background: `linear-gradient(${surfaceAngle - 25}deg, transparent 10%, ${t.wave} 45%, ${t.wave} 55%, transparent 90%)`,
+            }}
+          />
           {/* Ambient glow, clipped inside the card */}
           <div
             className="absolute rounded-full"
@@ -156,7 +193,7 @@ export const StatCard: React.FC<Props> = ({
               left: -width * 0.35 + flow * width * 0.7,
               top: -height * 0.45,
               background: `radial-gradient(circle, ${accent}${theme === 'dark' ? '18' : '10'} 0%, transparent 70%)`,
-              opacity: glow,
+              opacity: glow * (1 - exit),
               filter: 'blur(20px)',
             }}
           />
@@ -168,7 +205,7 @@ export const StatCard: React.FC<Props> = ({
               right: -width * 0.35 + (1 - flow) * width * 0.7,
               bottom: -height * 0.45,
               background: `radial-gradient(circle, ${accent2}${theme === 'dark' ? '14' : '0c'} 0%, transparent 70%)`,
-              opacity: 1 - glow * 0.6,
+              opacity: (1 - glow * 0.6) * (1 - exit),
               filter: 'blur(20px)',
             }}
           />
