@@ -40,7 +40,10 @@ const THEMES = {
   light: {
     surface: (angle: number) =>
       `linear-gradient(${angle}deg, #FFFFFF 0%, #FAFAFB 55%, #F4F4F6 100%)`,
-    border: '#E4E4E7',
+    // Deliberately darker than the site's zinc-200: the GIF corner
+    // stair-step pixels take this color, and near-white reads as white
+    // fringing on dark page backgrounds.
+    border: '#B8B8C0',
     text: '#09090B',
     sub: '#52525B',
     dot: '#09090B14',
@@ -132,7 +135,7 @@ export const StatCard: React.FC<Props> = ({
         style={{
           width: width - 8,
           height: height - 8,
-          padding: 1.5,
+          padding: 2.5,
           transform: `translateY(${rise}px) scale(${0.96 + enter * 0.04})`,
           opacity: enter,
           background: `conic-gradient(from ${sweep}deg at 50% 50%, ${accent}B0 0deg, transparent 70deg, transparent 180deg, ${accent2}70 250deg, transparent 310deg, ${accent}B0 360deg), linear-gradient(${t.border}, ${t.border})`,
