@@ -14,9 +14,10 @@ Find the best models & prices for your prompts — through a single, OpenAI-comp
 
 <br>
 
-<a href="https://openrouter.ai/models"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/stat-models-dark.gif"><img src="./assets/stat-models-light.gif" alt="Models on OpenRouter" width="272"></picture></a>
-<a href="https://openrouter.ai/models"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/stat-providers-dark.gif"><img src="./assets/stat-providers-light.gif" alt="Providers on OpenRouter" width="272"></picture></a>
-<a href="https://openrouter.ai/rankings"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/stat-tokens-dark.gif"><img src="./assets/stat-tokens-light.gif" alt="Tokens routed per month" width="272"></picture></a>
+<a href="https://openrouter.ai/models"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/stat-models-dark.gif"><img src="./assets/stat-models-light.gif" alt="Models on OpenRouter" width="208"></picture></a>
+<a href="https://openrouter.ai/models"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/stat-providers-dark.gif"><img src="./assets/stat-providers-light.gif" alt="Providers on OpenRouter" width="208"></picture></a>
+<a href="https://openrouter.ai/rankings"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/stat-tokens-dark.gif"><img src="./assets/stat-tokens-light.gif" alt="Tokens routed per month" width="208"></picture></a>
+<a href="https://openrouter.ai"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/stat-users-dark.gif"><img src="./assets/stat-users-light.gif" alt="Global users on OpenRouter" width="208"></picture></a>
 
 [![Website](https://img.shields.io/badge/Website-openrouter.ai-1e293b?style=for-the-badge)](https://openrouter.ai)
 [![Docs](https://img.shields.io/badge/Docs-openrouter.ai%2Fdocs-1e293b?style=for-the-badge)](https://openrouter.ai/docs)
@@ -29,7 +30,7 @@ Find the best models & prices for your prompts — through a single, OpenAI-comp
 
 ## Why OpenRouter?
 
-- **One API, 340+ models.** Route requests to models from OpenAI, Anthropic, Google, Meta, Mistral, and many more — without changing your code.
+- **One API, 400+ models.** Route requests to models from OpenAI, Anthropic, Google, Meta, Mistral, and many more — without changing your code.
 - **Better prices & uptime.** Automatic fallbacks and price/performance routing across 90+ providers.
 - **OpenAI-compatible.** Drop-in compatible with the OpenAI SDK — just change the base URL and key.
 - **No lock-in.** Compare models, switch instantly, and pay as you go.
