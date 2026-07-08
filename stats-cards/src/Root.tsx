@@ -44,7 +44,7 @@ const STATS = [
 export const Root: React.FC = () => {
   return (
     <>
-      {STATS.flatMap((stat) =>
+      {STATS.flatMap((stat, index) =>
         (['dark', 'light'] as const).map((theme) => (
           <Composition
             key={`${stat.id}-${theme}`}
@@ -63,6 +63,7 @@ export const Root: React.FC = () => {
               accent: ACCENT,
               accent2: ACCENT2,
               theme,
+              variant: index,
             }}
           />
         ))

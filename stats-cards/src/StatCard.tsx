@@ -19,13 +19,18 @@ export const statCardSchema = z.object({
   accent: z.string(),
   accent2: z.string(),
   theme: z.enum(['dark', 'light']),
+  // Position of this card in the row (0..n-1). Used to vary the background
+  // gradient/glow and phase-shift the loop so the four cards flow into each
+  // other side-by-side (and stacked) instead of looking identical.
+  variant: z.number().default(0),
 });
 
 type Props = z.infer<typeof statCardSchema>;
 
 const THEMES = {
   dark: {
-    surface: 'linear-gradient(145deg, #101114 0%, #0A0B0D 55%, #0E0F13 100%)',
+    surface: (angle: number) =>
+      `linear-gradient(${angle}deg, #101114 0%, #0A0B0D 55%, #0E0F13 100%)`,
     border: '#3B3D42',
     text: '#DDE0E2',
     sub: '#8B8D98',
@@ -33,7 +38,8 @@ const THEMES = {
     shineBase: '#DDE0E2',
   },
   light: {
-    surface: 'linear-gradient(145deg, #FFFFFF 0%, #FAFAFB 55%, #F4F4F6 100%)',
+    surface: (angle: number) =>
+      `linear-gradient(${angle}deg, #FFFFFF 0%, #FAFAFB 55%, #F4F4F6 100%)`,
     border: '#E4E4E7',
     text: '#09090B',
     sub: '#52525B',
@@ -64,10 +70,20 @@ export const StatCard: React.FC<Props> = ({
   accent,
   accent2,
   theme,
+  variant = 0,
 }) => {
   const frame = useCurrentFrame();
   const {fps, durationInFrames, width, height} = useVideoConfig();
   const t = THEMES[theme];
+
+  // 0..1 across the row of four cards; drives the background variation.
+  const flow = variant / 3;
+  // Gradient tilts progressively left-to-right so adjacent edges continue
+  // into each other; also reads as a diagonal cascade when cards wrap 2x2.
+  const surfaceAngle = 115 + flow * 60; // 115 / 135 / 155 / 175
+  // Phase-shift the looping effects so the row animates as a wave.
+  const phase = (variant * durationInFrames) / 4;
+  const loopFrame = (frame + phase) % durationInFrames;
 
   // --- Entrance ---
   const enter = spring({frame, fps, config: {damping: 16, stiffness: 120}});
@@ -83,16 +99,16 @@ export const StatCard: React.FC<Props> = ({
   const displayed = formatValue(countSpring * value, value);
 
   // Theme loop easing: cubic-bezier(0.4, 0, 0.6, 1)
-  const loop = pingPong(frame, durationInFrames);
+  const loop = pingPong(loopFrame, durationInFrames);
   const glow = interpolate(loop, [0, 1], [0.35, 0.75], {
     easing: Easing.bezier(0.4, 0, 0.6, 1),
   });
 
   // Conic border sweep (full rotation per loop = seamless)
-  const sweep = (frame / durationInFrames) * 360;
+  const sweep = (loopFrame / durationInFrames) * 360;
 
   // Beam of light traveling across the top edge
-  const beamX = interpolate(frame % durationInFrames, [0, durationInFrames], [-30, 130]);
+  const beamX = interpolate(loopFrame, [0, durationInFrames], [-30, 130]);
 
   // Shine sweeping across the number. Completes early and clamps at a
   // position where the accent stripe (and its repeat tile) sit fully
@@ -108,8 +124,11 @@ export const StatCard: React.FC<Props> = ({
     // Transparent canvas: GIF alpha is 1-bit, so no exterior glows/shadows.
     <AbsoluteFill className="items-center justify-center" style={{fontFamily}}>
       {/* Card with animated gradient border */}
+      {/* Large radius: GIF alpha is 1-bit, so anti-aliased corner pixels get
+          thresholded to opaque. With a big radius the stair-step follows the
+          curve; with a small one it filled the corners in as solid wedges. */}
       <div
-        className="relative rounded-lg"
+        className="relative rounded-[28px]"
         style={{
           width: width - 8,
           height: height - 8,
@@ -120,8 +139,8 @@ export const StatCard: React.FC<Props> = ({
         }}
       >
         <div
-          className="relative h-full w-full overflow-hidden rounded-lg px-12"
-          style={{background: t.surface}}
+          className="relative h-full w-full overflow-hidden rounded-[26.5px] px-12"
+          style={{background: t.surface(surfaceAngle)}}
         >
           {/* Ambient glow, clipped inside the card */}
           <div
@@ -129,7 +148,9 @@ export const StatCard: React.FC<Props> = ({
             style={{
               width: width * 0.8,
               height: height * 1.2,
-              left: -width * 0.2,
+              // Glow center drifts across the row (left on card 0, right on
+              // card 3) so the highlight appears to travel through the set.
+              left: -width * 0.35 + flow * width * 0.7,
               top: -height * 0.45,
               background: `radial-gradient(circle, ${accent}${theme === 'dark' ? '18' : '10'} 0%, transparent 70%)`,
               opacity: glow,
@@ -141,7 +162,7 @@ export const StatCard: React.FC<Props> = ({
             style={{
               width: width * 0.8,
               height: height * 1.2,
-              right: -width * 0.2,
+              right: -width * 0.35 + (1 - flow) * width * 0.7,
               bottom: -height * 0.45,
               background: `radial-gradient(circle, ${accent2}${theme === 'dark' ? '14' : '0c'} 0%, transparent 70%)`,
               opacity: 1 - glow * 0.6,
@@ -155,8 +176,7 @@ export const StatCard: React.FC<Props> = ({
             style={{
               backgroundImage: `radial-gradient(circle, ${t.dot} 1px, transparent 1px)`,
               backgroundSize: '22px 22px',
-              maskImage:
-                'radial-gradient(ellipse at 30% 40%, black 20%, transparent 75%)',
+              maskImage: `radial-gradient(ellipse at ${20 + flow * 40}% 40%, black 20%, transparent 75%)`,
             }}
           />
 
