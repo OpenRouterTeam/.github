@@ -29,7 +29,7 @@ Find the best models & prices for your prompts — through a single, OpenAI-comp
 
 ## Why OpenRouter?
 
-- **One API, 340+ models.** Route requests to models from OpenAI, Anthropic, Google, Meta, Mistral, and many more — without changing your code.
+- **One API, 400+ models.** Route requests to models from OpenAI, Anthropic, Google, Meta, Mistral, and many more — without changing your code.
 - **Better prices & uptime.** Automatic fallbacks and price/performance routing across 90+ providers.
 - **OpenAI-compatible.** Drop-in compatible with the OpenAI SDK — just change the base URL and key.
 - **No lock-in.** Compare models, switch instantly, and pay as you go.
