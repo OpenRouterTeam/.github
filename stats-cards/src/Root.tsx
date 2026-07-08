@@ -27,9 +27,9 @@ const STATS = [
   },
   {
     id: 'tokens',
-    value: 46.8,
+    value: 189,
     suffix: 'T',
-    label: 'Tokens / week',
+    label: 'Tokens / month',
     sub: 'routed across the network',
   },
 ] as const;
