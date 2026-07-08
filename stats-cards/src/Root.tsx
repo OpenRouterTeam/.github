@@ -32,6 +32,13 @@ const STATS = [
     label: 'Tokens / month',
     sub: 'routed across the network',
   },
+  {
+    id: 'users',
+    value: 10,
+    suffix: 'M+',
+    label: 'Global users',
+    sub: 'developers building on OpenRouter',
+  },
 ] as const;
 
 export const Root: React.FC = () => {

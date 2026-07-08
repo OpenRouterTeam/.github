@@ -1,7 +1,7 @@
 // Renders all stat cards (dark + light) as transparent, play-once GIFs.
 import {execSync} from 'node:child_process';
 
-const stats = ['models', 'providers', 'tokens'];
+const stats = ['models', 'providers', 'tokens', 'users'];
 const themes = ['dark', 'light'];
 
 for (const stat of stats) {
