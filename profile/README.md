@@ -178,7 +178,6 @@ console.log(await result.getText()); // tools run automatically
 | --- | --- |
 | [openrouter-examples](https://github.com/OpenRouterTeam/openrouter-examples) | Examples of integrating the OpenRouter API |
 | [openrouter-examples-python](https://github.com/OpenRouterTeam/openrouter-examples-python) | Calling OpenRouter models from Python |
-| [tool-calling](https://github.com/OpenRouterTeam/tool-calling) | Tool calling demo for OpenRouter |
 | [sign-in-with-openrouter](https://github.com/OpenRouterTeam/sign-in-with-openrouter) | Templates and skills for adding Sign In with OpenRouter |
 | [awesome-openrouter](https://github.com/OpenRouterTeam/awesome-openrouter) | Community list of apps built on OpenRouter |
 
